@@ -4,3 +4,8 @@ class Config(object):
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db_notification.sqlite'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+class ConfigTest(object):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../tests/db_test.sqlite'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False

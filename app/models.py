@@ -33,24 +33,19 @@ class Client(db.Model):
     __tablename__ = 'client'
 
     id = db.Column(db.Integer, primary_key=True)
-    phone = db.Column(db.String(11), nullable=False, unique=True)
-    code_phone = db.Column(db.String(3), nullable=False)
     email = db.Column(db.String(250), unique=True)
     tag = db.Column(db.String(250))
-    # todo time_zone
 
     def _get_code_phone(self) -> str:
         """ Возвращает код оператора из номера телефона """
         return self.phone[1:4]
 
-    def __init__(self, phone, email, tag):
-        self.phone = phone
-        self.code_phone = self._get_code_phone()
+    def __init__(self, email, tag):
         self.email = email
         self.tag = tag
 
     def __repr__(self):
-        return f"<{self.id} - {self.phone} - {self.tag}>"
+        return f"<{self.id} - {self.email} - {self.tag}>"
 
 
 class Message(db.Model):
@@ -77,7 +72,7 @@ class Message(db.Model):
 class ClientSchema(ma.Schema):
     class Meta:
         model = Client
-        fields = ('id', 'phone', 'code_phone', 'email', 'tag')
+        fields = ('id', 'email', 'tag')
 
 
 class MessageSchema(ma.Schema):
