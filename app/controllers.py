@@ -28,12 +28,9 @@ class ClientController(Resource):
         return 201
 
     def delete(self):
-        """ Удаление клиента из БД.
-            :param
-                Данные передаются в json {"id_delete":}
-                id_delete: int - id клиента которого надо удалить.
-            :return
-                Сообщение об успешности выполнения или ошибка.
+        """Удаление клиента из БД.
+           Данные передаются в json {"id_delete":}
+               id_delete: int - id клиента которого надо удалить.
         """
         try:
             data_json = request.get_json()
@@ -46,16 +43,14 @@ class ClientController(Resource):
 
 
 class ClientUpdateController(Resource):
-    """ Класс для обновления данных клиента """
+    """Обновления данных клиента."""
     def put(self, id_update):
-        """ Обновления данных атрибутов клиента.
-            :param
+        """Обновления данных атрибутов клиента.
+            :param id_update -- id клиента данные которого нужно обновить.
+            :type id_update: int
                 Данные передаются в json {"up_email":, "up_tag":}
-                up_email: str - почта клиента.
-                up_tag: str - произвольная метка(описание) клиента.
-            :return
-                Сообщение об успешности выполнения или ошибка.
-
+                    up_email: str - почта клиента.
+                    up_tag: str - произвольная метка(описание) клиента.
         """
         try:
             data_json = request.get_json()
@@ -72,21 +67,18 @@ class ClientUpdateController(Resource):
 
 
 class MailingController(Resource):
-    """ Класс для добавления новой рассылки и удаления существующей из БД """
+    """Добавления новой рассылки и удаления существующей из БД."""
     def post(self):
-        """ Добавления новой рассылки в БД со всеми ее атрибутами.
-            :param
-                Данные передаются в json
-                {"start_send":, "end_send":, "text":, "filter_client"}
-                start_send: str - дата и время запуска рассылки в
-                                  формате '%Y-%m-%d %H:%M'.
-                end_send: str - дата и время окончания рассылки
-                                формате '%Y-%m-%d %H:%M'.
-                text: str - текст сообщения для доставки клиенту.
-                filter_client: str - фильтр свойств клиентов (определяет
-                                отправлять или нет сообщение).
-            :return
-                Сообщение об успешности выполнения или ошибка.
+        """Добавления новой рассылки в БД со всеми ее атрибутами.
+            Данные передаются в json
+            {"start_send":, "end_send":, "text":, "filter_client"}
+            start_send: str - дата и время запуска рассылки в
+                              формате '%Y-%m-%d %H:%M'.
+            end_send: str - дата и время окончания рассылки
+                            формате '%Y-%m-%d %H:%M'.
+            text: str - текст сообщения для доставки клиенту.
+            filter_client: str - фильтр свойств клиентов (определяет
+                            отправлять или нет сообщение).
         """
         try:
             data_json = request.get_json()
@@ -107,12 +99,9 @@ class MailingController(Resource):
         return 201
 
     def delete(self):
-        """ Удаление рассылки из БД.
-            :param
-                Данные передаются в json {"id_delete":}
-                id_delete: int - id рассылки которую нужно удалить.
-            :return
-                Сообщение об успешности выполнения или ошибка.
+        """Удаление рассылки из БД.
+            Данные передаются в json {"id_delete":}
+            id_delete: int - id рассылки которую нужно удалить.
         """
         try:
             data_json = request.get_json()
@@ -125,25 +114,32 @@ class MailingController(Resource):
 
 
 class MailingUpdateController(Resource):
-    """ Класс для обновления данных рассылки  """
+    """Обновления данных рассылки."""
     def put(self, id_update):
-        """ Обновления данных атрибутов клиента.
-            :param
-                Данные передаются в json {"up_email":, "up_tag":}
-                up_email: str - почта клиента.
-                up_tag: str - произвольная метка(описание) клиента.
-            :return
-                Сообщение об успешности выполнения или ошибка.
-
+        """ Обновления данных атрибутов рассылки.
+            :param id_update -- id рассылки данные которой нужно обновить.
+            :type id_update: int
+                Данные передаются в json
+                {"up_start_send":, "up_end_send":, "up_text":,
+                 "up_filter_client"}
+                up_start_send: str - дата и время запуска рассылки в
+                                  формате '%Y-%m-%d %H:%M'.
+                up_end_send: str - дата и время окончания рассылки
+                                формате '%Y-%m-%d %H:%M'.
+                up_text: str - текст сообщения для доставки клиенту.
+                up_filter_client: str - фильтр свойств клиентов (определяет
+                                отправлять или нет сообщение).
         """
         try:
             data_json = request.get_json()
 
-            data_update = {"email": data_json.get("up_email"),
-                           "tag": data_json.get("up_tag")}
+            data_update = {"start_send": data_json.get("up_start_send"),
+                           "end_send": data_json.get("up_end_send"),
+                           "text": data_json.get("up_text"),
+                           "filter_client": data_json.get("up_filter_client")}
 
-            Database().update_client(id_update=id_update,
-                                     data_request=data_update)
+            Database().update_mailing(id_update=id_update,
+                                      data_request=data_update)
 
         except Exception as e:
             return f'{e}', 400

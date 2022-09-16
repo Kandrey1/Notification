@@ -103,4 +103,29 @@ def test_controllers_mailing_dell(client_test, app_test, create_mailing_one,
     assert mail.end_send == datetime.datetime(2021, 11, 2, 10, 30)
     assert mail.text == "message two"
     assert mail.filter_client == "filter two"
+
+
+def test_controllers_mailing_update(client_test, app_test, create_mailing_one):
+    """ Обновление данных клиента """
+    data_update = {"up_start_send": "3021-11-02 10:30",
+                   "up_end_send": "3021-11-05 11:30",
+                   "up_text": "message up",
+                   "up_filter_client": "filter up"}
+
+    with app_test.app_context():
+        mail = create_mailing_one
+        db.session.add(mail)
+        db.session.commit()
+
+        assert Mailing.query.first().text == "message one"
+
+    response = client_test.put("/api/mailing/1", json=data_update)
+
+    mail1 = Mailing.query.first()
+
+    assert response.status_code == 200
+    assert mail1.start_send == datetime.datetime(3021, 11, 2, 10, 30)
+    assert mail1.end_send == datetime.datetime(3021, 11, 5, 11, 30)
+    assert mail1.text == "message up"
+    assert mail1.filter_client == "filter up"
 # ----------------- Mailing end ------------------------------------------------

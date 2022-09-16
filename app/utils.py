@@ -136,7 +136,7 @@ class Database:
         """
         try:
             mail = Mailing.query.get_or_404(id_update)
-
+            print('befor',mail)
             for key, val in data_request.items():
                 if val is not None:
                     if key == 'start_send':
@@ -147,7 +147,7 @@ class Database:
                         mail.text = val
                     if key == 'filter_client':
                         mail.filter_client = val
-
+            print('after', mail)
             db.session.commit()
 
         except NotFound as e:
