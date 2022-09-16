@@ -13,8 +13,8 @@ class Mailing(db.Model):
     __tablename__ = 'mailing'
 
     id = db.Column(db.Integer, primary_key=True)
-    start_send = db.Column(db.DateTime)
-    end_send = db.Column(db.DateTime)
+    start_send = db.Column(db.DateTime, nullable=False)
+    end_send = db.Column(db.DateTime, nullable=False)
     text = db.Column(db.String(250), nullable=False)
     filter_client = db.Column(db.String(200), nullable=False)
 
@@ -33,12 +33,8 @@ class Client(db.Model):
     __tablename__ = 'client'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(250), unique=True)
+    email = db.Column(db.String(250), nullable=False, unique=True)
     tag = db.Column(db.String(250))
-
-    def _get_code_phone(self) -> str:
-        """ Возвращает код оператора из номера телефона """
-        return self.phone[1:4]
 
     def __init__(self, email, tag):
         self.email = email
@@ -54,7 +50,7 @@ class Message(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     create = db.Column(db.DateTime, default=datetime.datetime.today())
-    status = db.Column(db.Boolean, default=False)
+    status = db.Column(db.Boolean, default=False, nullable=False)
     mailing_id = db.Column(db.Integer, db.ForeignKey('mailing.id'),
                            nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'),
