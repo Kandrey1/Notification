@@ -1,7 +1,8 @@
 from flask import request
 from flask_restful import Resource
-from .utils import Database, get_date_from_str
+from .utils import Database, get_date_from_str, get_number_clients_mailing
 from .models import Client, Mailing
+from .tasks import start_mailing
 
 
 class ClientController(Resource):
@@ -146,6 +147,20 @@ class MailingUpdateController(Resource):
         return 201
 
 
-class MessageController(Resource):
-    """ Класс для действия над сущностью сообщения """
-    pass
+class MailingStartController(Resource):
+    """Запускает рассылку."""
+    def post(self, id_mailing: int):
+        """Запускает рассылку используя задачи celery.
+           :param id_mailing -- id рассылки которую необходимо запустить.
+           :type id_mailing: int
+           Возвращает количество клиентов в рассылке.
+        """
+        try:
+            number = get_number_clients_mailing(mailing_id=id_mailing)
+
+            start_mailing.delay(mailing_id=id_mailing)
+
+        except Exception as e:
+            return f'{e}', 400
+
+        return {f"Клиентов в рассылке id={id_mailing}": number}, 200

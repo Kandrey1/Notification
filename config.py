@@ -5,7 +5,12 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db_notification.sqlite'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+    # CELERY_ENABLE_UTC = False
+    # CELERY_TIMEZONE = 'Europe/Moscow'
 
-class ConfigTest(object):
+
+class ConfigTest(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../tests/db_test.sqlite'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

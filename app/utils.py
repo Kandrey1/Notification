@@ -75,14 +75,14 @@ class Database:
         """
         try:
             if id_delete is None:
-                raise Exception(f"Нет такой записи")
+                raise Exception("Нет такой записи")
 
             db.session.execute(delete(table).where(table.id == id_delete))
             db.session.commit()
 
-        except Exception as e:
+        except Exception:
             db.session.rollback()
-            raise Exception(f"Ошибка при удалении записи из БД")
+            raise Exception("Ошибка при удалении записи из БД")
 
     @staticmethod
     def update_client(id_update: int, data_request: dict) -> None:
@@ -110,7 +110,7 @@ class Database:
 
             db.session.commit()
 
-        except NotFound as e:
+        except NotFound:
             db.session.rollback()
             raise Exception(f"Клиента id={id_update} нет в БД")
 
@@ -136,7 +136,7 @@ class Database:
         """
         try:
             mail = Mailing.query.get_or_404(id_update)
-            print('befor',mail)
+
             for key, val in data_request.items():
                 if val is not None:
                     if key == 'start_send':
@@ -147,13 +147,52 @@ class Database:
                         mail.text = val
                     if key == 'filter_client':
                         mail.filter_client = val
-            print('after', mail)
+
             db.session.commit()
 
-        except NotFound as e:
+        except NotFound:
             db.session.rollback()
             raise Exception(f"Рассылки id={id_update} нет в БД")
 
         except Exception as ex:
             db.session.rollback()
             raise Exception(f"Ошибка при обновлении записи в БД {ex}")
+
+
+def get_number_clients_mailing(mailing_id: int) -> int:
+    """Возвращает количество клиентов которым будет совершена рассылка.
+       :param mailing_id -- id рассылки.
+       :type mailing_id: int
+       :return number_client -- количество клиентов, которым будет
+                                отправлено сообщение из рассылки.
+       :rtype number_client: int
+    """
+    try:
+        mailing = Mailing.query.get(mailing_id)
+
+        if not mailing:
+            raise Exception("Такой рассылки не существует")
+
+        number_client = Client.query.filter(
+            Client.tag == mailing.filter_client).count()
+
+    except Exception as e:
+        raise Exception(e)
+
+    return number_client
+
+
+def get_id_filtered_client(filter_client: str) -> list:
+    """Возвращает список id клиентов удовлетворяющих фильтру рассылки.
+        :param filter_client -- фильтр клиента для выбора клиента.
+        :type filter_client: str
+        :return list_client -- Список id клиентов удовлетворяющих фильтру.
+        :rtype list_client: list
+    """
+    list_client = list()
+    clients = Client.query.filter(Client.tag == filter_client).all()
+
+    for client in clients:
+        list_client.append(client.id)
+
+    return list_client

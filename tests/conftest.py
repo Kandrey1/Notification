@@ -48,6 +48,8 @@ def get_json_client_one():
 @pytest.fixture
 def get_json_client_two():
     return {"email": "client2@client", "tag": "tag2"}
+
+
 # ------------------------------- Client ---------------------------------------
 # ------------------------------- Mailing --------------------------------------
 @pytest.fixture
@@ -115,3 +117,4 @@ def create_message_one():
                       mailing_id=2,
                       client_id=2)
     return message
+# ------------------------------- Message --------------------------------------

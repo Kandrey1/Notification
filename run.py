@@ -2,11 +2,13 @@ from app import create_app
 from config import Config
 from app.models import db
 from app.blueprint_api import api_bp
-
+from celeryd import create_celery
 
 app = create_app(Config)
 
 app.register_blueprint(api_bp, url_prefix='/api')
+
+celery = create_celery()
 
 
 @app.before_first_request

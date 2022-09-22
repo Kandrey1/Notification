@@ -59,6 +59,7 @@ def test_controllers_client_update(client_test, app_test, create_client_one):
     assert Client.query.first().email == "client_up@client"
     assert Client.query.first().tag == "tag_up"
 
+
 # ----------------- Client end -------------------------------------------------
 # ----------------- Mailing start ----------------------------------------------
 def test_controllers_mailing_post(client_test, app_test, get_json_mailing_one):

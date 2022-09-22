@@ -9,6 +9,4 @@ def create_app(config_class):
     from .models import db
     db.init_app(app)
 
-    from .models import Client, Message, Mailing
-
     return app
