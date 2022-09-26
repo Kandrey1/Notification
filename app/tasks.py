@@ -10,6 +10,12 @@ celery = create_celery()
 
 
 @celery.task(bind=True, max_retries=3, soft_time_limit=180, time_limit=200)
+def automatic_start_mailing(self) -> int:
+    """Автоматический запуск рассылок."""
+    pass
+
+
+@celery.task(bind=True, max_retries=3, soft_time_limit=180, time_limit=200)
 def start_mailing(self, mailing_id: int) -> int:
     """Запускает рассылку сообщений.
         :param mailing_id -- id рассылки которую необходимо запустить.
